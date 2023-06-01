@@ -7,10 +7,15 @@ function Player.load()
 end
 
 function Player.update(dt)
-   Player.position = {
-      x = Player.position.x + GetKeyAxis("right", "left") * Player.speed * dt,
-      y = Player.position.y + GetKeyAxis("down", "up") * Player.speed * dt
-   }
+   local horizontal_direction = GetKeyAxis("right", "left")
+   local vertical_direction = GetKeyAxis("down", "up")
+   local normalize_amount = math.sqrt( horizontal_direction^2 + vertical_direction^2 )
+   if normalize_amount > 0 then
+      Player.position = {
+         x = Player.position.x + (horizontal_direction/normalize_amount) * Player.speed * dt,
+         y = Player.position.y + (vertical_direction/normalize_amount) * Player.speed * dt
+      }
+   end
 end
  
 function Player.draw()
