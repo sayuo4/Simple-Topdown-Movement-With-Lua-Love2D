@@ -9,6 +9,8 @@ function love.load()
    Enemy.load()
    Spawner.load()
    Debugger.load()
+   Debugger.printObject("player", Player)
+   Debugger.printObject("enemy", Enemy)
 end
 
 function love.update(dt)
