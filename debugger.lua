@@ -2,7 +2,7 @@ Debugger = {}
 
 function Debugger.load()
    Debugger.data = {
-      ["fps"] = 0.0,
+      ["FPS"] = 0.0,
       ["frameTime"] = 0.0,
       ["totalRuntime"] = 0.0,
       ["objectsToPrint"] = {},
@@ -11,9 +11,9 @@ function Debugger.load()
 end
 
 function Debugger.update(dt)
-   Debugger.data["fps"] = love.timer.getFPS()
+   Debugger.data["FPS"] = love.timer.getFPS()
    Debugger.data["frameTime"] = love.timer.step()
-   Debugger.data["total_runtime"] = love.timer.getTime()
+   Debugger.data["totalRuntime"] = love.timer.getTime()
    Debugger.data["objectsAsString"] = tableToString(Debugger.data["objectsToPrint"], true, false)
 end
  
