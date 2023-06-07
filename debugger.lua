@@ -1,10 +1,15 @@
 Debugger = {}
 
+local hideDebugger = false
+local textScale    = 1.25
+local excludedEnteries = {"objectsToPrint", "objectsAsString", "windowProps"}
+
 function Debugger.load()
    Debugger.data = {
       ["FPS"] = 0.0,
       ["frameTime"] = 0.0,
       ["totalRuntime"] = 0.0,
+      ["windowProps"] = "",
       ["objectsToPrint"] = {},
       ["objectsAsString"] = "",
    }
@@ -14,37 +19,48 @@ function Debugger.update(dt)
    Debugger.data["FPS"] = love.timer.getFPS()
    Debugger.data["frameTime"] = love.timer.step()
    Debugger.data["totalRuntime"] = love.timer.getTime()
+   Debugger.data["windowProps"] = tableToString(_G.windowProps, true, false)
    Debugger.data["objectsAsString"] = tableToString(Debugger.data["objectsToPrint"], true, false)
 end
  
 function Debugger.draw()
-   local padding = {x = 10, y = 10}
-   local seperateAmount = 30
-   local scalling_factor = 1.5
-   local numberOfEnteries = 0
-
-   love.graphics.setColor(1, 1, 1)
-   for key,val in pairs(Debugger.data) do
-      -- "Comment" the 'objectsAsString' entery out of the text rendering, because it's too long
-      if key ~= "objectsAsString" then
-         numberOfEnteries = numberOfEnteries + 1
-         love.graphics.print(
-            {{1, 1, 1}, key .. ": " .. tostring(val)},
-            padding.x, padding.y + seperateAmount * numberOfEnteries, 0,
-            scalling_factor
-         )
-      end
+   if hideDebugger == true then
+      goto endOfDrawFunc
    end
    
+   local padding = {x = 10, y = 10}
+   local textToRender = ""
+   
+   for key,val in pairs(Debugger.data) do
+      -- "Comment-out" the `excludedEnteries` from the text rendering, because they're too long, or for other reasons
+      for i=1, #excludedEnteries do
+         if key == excludedEnteries[i] then
+            goto endOfPrintLoop
+         end
+      end
+      textToRender = textToRender .. key .. ": " .. tostring(val) .. "\n"
+      ::endOfPrintLoop::
+   end
+   
+   love.graphics.setColor(1, 1, 1)
    love.graphics.print(
-      {{1, 1, 1}, "objectsAsString" .. ": " .. tostring(Debugger.data["objectsAsString"])},
-      padding.x, padding.y + seperateAmount * (numberOfEnteries + 1), 0,
-      scalling_factor
+      {{1, 1, 1}, textToRender},
+      padding.x, padding.y, 0,
+      textScale
    )
+   ::endOfDrawFunc::
 end
 
 function Debugger.printObject(key, value)
    Debugger.data["objectsToPrint"][key] = value
+end
+
+function Debugger.toggle()
+   hideDebugger = not hideDebugger
+end
+
+function Debugger.changeTextScaleBy(delta)
+   textScale = textScale + delta
 end
 
 function tableToString(t, prettyPrint, includeFunctions)
