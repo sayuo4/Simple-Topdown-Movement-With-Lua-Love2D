@@ -11,8 +11,8 @@ local newWinFlags = {
 _G.windowProps = {width = 0, height = 0, flags = {}}
 
 local helpMsg = [[
-              Press `escape` to quit the game
-  Press the back-tick/grave key '`' to toggle the debugger
+                     Press `escape` to quit the game
+   Press the back-tick/grave key '`' to toggle the debugger
 Increase debugger text size by pressing =/- keys respectively
 ]]
 
